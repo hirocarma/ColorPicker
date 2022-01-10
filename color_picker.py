@@ -30,7 +30,7 @@ def printColor(event,x,y,flags,param):
             pick_width = max(480, int(width*1.1))
             pick = np.full((pick_height, pick_width, 3), (r, g, b), dtype=np.uint8)
             pick[0:height, 0:width] = rec_img
-            txt = ' POS:' + str(x) + 'x' + str(y) + \
+            txt = ' SIZE:' + str(x-ix) + 'x' + str(y-iy) + \
             " RGB: " + str(r) + ' ,' + str(g) + ' ,' + str(b) + \
             " HSV: " + str(h) + ' ,' + str(s) + ' ,' + str(v)
             print(txt)
