@@ -2,8 +2,8 @@
 
 ## Features
 Simple & Portable ColorPicker.
-Hold down the Shift key and drag to output the size of the selected area.
-
+Hold down the Shift key and drag to output the information of the selected area.
+Output L*a*b*(&c*) , RGB , HSV , complementary color (& RGB)
 ![Selected](imgs/select.png)
 
 ## required
