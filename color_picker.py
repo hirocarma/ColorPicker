@@ -55,24 +55,21 @@ def printColor(event,x,y,flags,param):
             str(b_ast) + ' ,' + str(c_ast) + \
             "| RGB: " + str(r) + ' ,' + str(g) + ' ,' + str(b) + \
             "| HSV: " + str(h) + ' ,' + str(s) + ' ,' + str(v)
-            print(txt)
             cv2.putText(pick, txt, (3, 40), \
                     cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 1, cv2.LINE_AA)
             cv2.rectangle(pick,
               pt1=(540, 120),
               pt2=(720, 360),
               color=(c_b, c_g, c_r),
-              thickness=-1,
-              lineType=cv2.LINE_4,
-              shift=0)
-            c_txt0 = 'Complementary Color' + str(c_r) + ',' + str (c_g) + \
-                ',' + str(c_b)
+              thickness=-1)
+            c_txt0 = 'Complementary Color'
             cv2.putText(pick, c_txt0, (540, 120), \
                     cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 1, cv2.LINE_AA)
             c_txt1 = 'RGB:' + str(c_r) + ',' + str (c_g) + \
                 ',' + str(c_b)
             cv2.putText(pick, c_txt1, (560, 140), \
                     cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 1, cv2.LINE_AA)
+            print(txt + '| ' + c_txt0 + c_txt1)
 
             WindowName="pick"
             cv2.imshow(WindowName, pick)
