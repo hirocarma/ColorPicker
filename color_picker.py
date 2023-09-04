@@ -28,25 +28,52 @@ def printColor(event,x,y,flags,param):
             b_ast = int(np.mean(lab_img[:,:,2]))
             c_ast = int(math.sqrt(a_ast**2+b_ast**2))
 
-            r = int(np.mean(rec_img[:,:,0]))
-            g = int(np.mean(rec_img[:,:,1]))
-            b = int(np.mean(rec_img[:,:,2]))
+            rgb_img = cv2.cvtColor(rec_img, cv2.COLOR_BGR2RGB)
+            r = int(np.mean(rgb_img[:,:,0]))
+            g = int(np.mean(rgb_img[:,:,1]))
+            b = int(np.mean(rgb_img[:,:,2]))
 
-            hsv = colorsys.rgb_to_hsv(r/255.0,g/255.0,b/255.0)
-            (h, s, v) = (int(hsv[0]*255), int(hsv[1]*255),int(hsv[2]*255))
+            hsv_img = cv2.cvtColor(rec_img,cv2.COLOR_BGR2HSV)
+            h = int(np.mean(hsv_img[:,:,0]))
+            s = int(np.mean(hsv_img[:,:,1]))
+            v = int(np.mean(hsv_img[:,:,2]))
 
+            #complementary color
+            val = int(max([r,g,b])) + int(min([r,g,b]))  
+            c_r = val - r
+            c_g = val - g
+            c_b = val - b
+            
             height, width = rec_img.shape[:2]
             pick_height = max(240, int(height*1.1))
-            pick_width = max(640, int(width*1.1))
-            pick = np.full((pick_height, pick_width, 3), (r, g, b), dtype=np.uint8)
+            pick_width = max(720, int(width*1.1))
+            pick = np.full((pick_height, pick_width, 3), (b, g, r), dtype=np.uint8)
+            
             pick[0:height, 0:width] = rec_img
             txt = ' SIZE:' + str(x-ix) + 'x' + str(y-iy) + \
-            "| L*a*b*: " + str(L_ast) + ' ,' + str(a_ast) + ' ,' + str(b_ast) + ' ,' + str(c_ast) + \
+            "| L*a*b*: " + str(L_ast) + ' ,' + str(a_ast) + ' ,' + \
+            str(b_ast) + ' ,' + str(c_ast) + \
             "| RGB: " + str(r) + ' ,' + str(g) + ' ,' + str(b) + \
             "| HSV: " + str(h) + ' ,' + str(s) + ' ,' + str(v)
             print(txt)
             cv2.putText(pick, txt, (3, 40), \
                     cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 1, cv2.LINE_AA)
+            cv2.rectangle(pick,
+              pt1=(540, 120),
+              pt2=(720, 360),
+              color=(c_b, c_g, c_r),
+              thickness=-1,
+              lineType=cv2.LINE_4,
+              shift=0)
+            c_txt0 = 'Complementary Color' + str(c_r) + ',' + str (c_g) + \
+                ',' + str(c_b)
+            cv2.putText(pick, c_txt0, (540, 120), \
+                    cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 1, cv2.LINE_AA)
+            c_txt1 = 'RGB:' + str(c_r) + ',' + str (c_g) + \
+                ',' + str(c_b)
+            cv2.putText(pick, c_txt1, (560, 140), \
+                    cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 1, cv2.LINE_AA)
+
             WindowName="pick"
             cv2.imshow(WindowName, pick)
             view_img = img.copy()
