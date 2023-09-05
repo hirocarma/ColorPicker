@@ -43,33 +43,55 @@ def printColor(event,x,y,flags,param):
             c_r = val - r
             c_g = val - g
             c_b = val - b
+            #opposite color
+            r_r = 255 - r
+            r_g = 255 - g
+            r_b = 255 - b
             
             height, width = rec_img.shape[:2]
             pick_height = max(240, int(height*1.1))
-            pick_width = max(720, int(width*1.1))
+            pick_width = max(360, int(width*1.1))
             pick = np.full((pick_height, pick_width, 3), (b, g, r), dtype=np.uint8)
             
             pick[0:height, 0:width] = rec_img
-            txt = ' SIZE:' + str(x-ix) + 'x' + str(y-iy) + \
-            "| L*a*b*: " + str(L_ast) + ' ,' + str(a_ast) + ' ,' + \
-            str(b_ast) + ' ,' + str(c_ast) + \
-            "| RGB: " + str(r) + ' ,' + str(g) + ' ,' + str(b) + \
-            "| HSV: " + str(h) + ' ,' + str(s) + ' ,' + str(v)
-            cv2.putText(pick, txt, (3, 40), \
+            txt0 = "L*a*b* c*: " + str(L_ast) + ' ,' + str(a_ast) + ' ,' + \
+            str(b_ast) + ' ,' + str(c_ast)
+            txt1 = "RGB: " + str(r) + ' ,' + str(g) + ' ,' + str(b)
+            txt2 = "HSV: " + str(h) + ' ,' + str(s) + ' ,' + str(v)
+            cv2.putText(pick, txt0, (3, 40), \
                     cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 1, cv2.LINE_AA)
+            cv2.putText(pick, txt1, (3, 60), \
+                    cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 1, cv2.LINE_AA)
+            cv2.putText(pick, txt2, (3, 80), \
+                    cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 1, cv2.LINE_AA)
+
             cv2.rectangle(pick,
-              pt1=(540, 120),
-              pt2=(720, 360),
+              pt1=(200, 120),
+              pt2=(360, 180),
               color=(c_b, c_g, c_r),
               thickness=-1)
             c_txt0 = 'Complementary Color'
-            cv2.putText(pick, c_txt0, (540, 120), \
+            cv2.putText(pick, c_txt0, (180, 140), \
                     cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 1, cv2.LINE_AA)
             c_txt1 = 'RGB:' + str(c_r) + ',' + str (c_g) + \
                 ',' + str(c_b)
-            cv2.putText(pick, c_txt1, (560, 140), \
+            cv2.putText(pick, c_txt1, (200, 160), \
                     cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 1, cv2.LINE_AA)
-            print(txt + '| ' + c_txt0 + c_txt1)
+
+            cv2.rectangle(pick,
+              pt1=(200, 180),
+              pt2=(360, 360),
+              color=(r_b, r_g, r_r),
+              thickness=-1)
+            r_txt0 = 'Opposite Color'
+            cv2.putText(pick, r_txt0, (180, 200), \
+                    cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 1, cv2.LINE_AA)
+            r_txt1 = 'RGB:' + str(c_r) + ',' + str (c_g) + \
+                ',' + str(c_b)
+            cv2.putText(pick, r_txt1, (200, 220), \
+                    cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 1, cv2.LINE_AA)
+            
+            print(txt0 + txt1 + txt2 + '| ' + c_txt0 + c_txt1)
 
             WindowName="pick"
             cv2.imshow(WindowName, pick)
