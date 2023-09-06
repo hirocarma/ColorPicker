@@ -4,7 +4,7 @@
 Simple & Portable ColorPicker.
 Hold down the Shift key and drag to output the information of the selected area.  
 
-Output: L* a* b* (&c*) , RGB , HSV , Complementary Color (& RGB),Opposite Color (&RGB)
+Output: L* a* b* (&c*) , RGB , HSV , Complementary Color (RGB,HSV),Opposite Color (RGB,HSV)
 ![Selected](imgs/select.png)
 
 ## required
