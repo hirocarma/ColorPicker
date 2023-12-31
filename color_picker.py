@@ -22,7 +22,9 @@ def printColor(event,x,y,flags,param):
         if drawing == True:
             drawing = False
             rec_img = img[iy:y,ix:x]
-
+            if iy == y or ix == x:
+                rec_img = img[iy:y+1,ix:x+1]
+                
             lab_img = cv2.cvtColor(rec_img, cv2.COLOR_BGR2Lab)
             L_ast = int(np.mean(lab_img[:,:,0]))
             a_ast = int(np.mean(lab_img[:,:,1]))
@@ -60,11 +62,15 @@ def printColor(event,x,y,flags,param):
             str(b_ast) + ' ,' + str(c_ast)
             txt1 = "RGB: " + str(r) + ' ,' + str(g) + ' ,' + str(b)
             txt2 = "HSV: " + str(h) + ' ,' + str(s) + ' ,' + str(v)
+            txt3 = "colorcode:" + '{:x}'.format(r) + \
+                '{:x}'.format(g) + '{:x}'.format(b)
             cv2.putText(pick, txt0, (3, 40), \
                     cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 1, cv2.LINE_AA)
             cv2.putText(pick, txt1, (3, 60), \
                     cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 1, cv2.LINE_AA)
             cv2.putText(pick, txt2, (3, 80), \
+                    cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 1, cv2.LINE_AA)
+            cv2.putText(pick, txt3, (3, 100), \
                     cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 1, cv2.LINE_AA)
 
             cv2.rectangle(pick,
