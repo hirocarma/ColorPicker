@@ -21,10 +21,6 @@ def printColor(event,x,y,flags,param):
     elif event == cv2.EVENT_LBUTTONUP:
         if drawing == True:
             drawing = False
-            iy = 0
-            y  = 20
-            ix = 0
-            x = 20
             rec_img = img[iy:y,ix:x]
             if iy == y or ix == x:
                 rec_img = img[iy:y+1,ix:x+1]
