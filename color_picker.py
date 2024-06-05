@@ -21,6 +21,10 @@ def printColor(event,x,y,flags,param):
     elif event == cv2.EVENT_LBUTTONUP:
         if drawing == True:
             drawing = False
+            iy = 0
+            y  = 20
+            ix = 0
+            x = 20
             rec_img = img[iy:y,ix:x]
             if iy == y or ix == x:
                 rec_img = img[iy:y+1,ix:x+1]
@@ -62,8 +66,10 @@ def printColor(event,x,y,flags,param):
             str(b_ast) + ' ,' + str(c_ast)
             txt1 = "RGB: " + str(r) + ' ,' + str(g) + ' ,' + str(b)
             txt2 = "HSV: " + str(h) + ' ,' + str(s) + ' ,' + str(v)
-            txt3 = "colorcode:" + '{:x}'.format(r) + \
+            txt3 = "Colorcode:" + '{:x}'.format(r) + \
                 '{:x}'.format(g) + '{:x}'.format(b)
+            txt4 = "Coordinate:" + str(iy)  + ":" + str(y) + "x" +\
+                str(ix)  + ":" + str(x) 
             cv2.putText(pick, txt0, (3, 40), \
                     cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 1, cv2.LINE_AA)
             cv2.putText(pick, txt1, (3, 60), \
@@ -71,6 +77,8 @@ def printColor(event,x,y,flags,param):
             cv2.putText(pick, txt2, (3, 80), \
                     cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 1, cv2.LINE_AA)
             cv2.putText(pick, txt3, (3, 100), \
+                    cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 1, cv2.LINE_AA)
+            cv2.putText(pick, txt4, (3, 220), \
                     cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 1, cv2.LINE_AA)
 
             cv2.rectangle(pick,
