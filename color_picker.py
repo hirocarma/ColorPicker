@@ -64,17 +64,20 @@ def printColor(event,x,y,flags,param):
             txt2 = "HSV: " + str(h) + ' ,' + str(s) + ' ,' + str(v)
             txt3 = "Colorcode:" + '{:x}'.format(r) + \
                 '{:x}'.format(g) + '{:x}'.format(b)
-            txt4 = "Coordinate:" + str(iy)  + ":" + str(y) + "x" +\
-                str(ix)  + ":" + str(x) 
-            cv2.putText(pick, txt0, (3, 40), \
+            txt4 = "Coordinate:" 
+            txt5 = str(iy)  + ":" + str(y) + "x" + str(ix)  + ":" + str(x) 
+
+            cv2.putText(pick, txt0, (3, 20), \
                     cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 1, cv2.LINE_AA)
-            cv2.putText(pick, txt1, (3, 60), \
+            cv2.putText(pick, txt1, (3, 40), \
                     cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 1, cv2.LINE_AA)
-            cv2.putText(pick, txt2, (3, 80), \
+            cv2.putText(pick, txt2, (3, 60), \
                     cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 1, cv2.LINE_AA)
-            cv2.putText(pick, txt3, (3, 100), \
+            cv2.putText(pick, txt3, (3, 80), \
                     cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 1, cv2.LINE_AA)
             cv2.putText(pick, txt4, (3, 220), \
+                    cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 1, cv2.LINE_AA)
+            cv2.putText(pick, txt5, (3, 240), \
                     cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 1, cv2.LINE_AA)
 
             cv2.rectangle(pick,
@@ -95,15 +98,15 @@ def printColor(event,x,y,flags,param):
             c_v = int(np.mean(c_hsv_img[:,:,2]))
 
             c_txt0 = 'Complementary Color'
-            cv2.putText(pick, c_txt0, (180, 80), \
+            cv2.putText(pick, c_txt0, (180, 60), \
                     cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 1, cv2.LINE_AA)
             c_txt1 = 'RGB:' + str(c_r) + ',' + str (c_g) + \
                 ',' + str(c_b)
-            cv2.putText(pick, c_txt1, (200, 100), \
+            cv2.putText(pick, c_txt1, (200, 80), \
                     cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 1, cv2.LINE_AA)
             c_txt2 = 'HSV:' + str(c_h) + ',' + str (c_s) + \
                 ',' + str(c_v)
-            cv2.putText(pick, c_txt2, (200, 120), \
+            cv2.putText(pick, c_txt2, (200, 100), \
                     cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 1, cv2.LINE_AA)
 
             cv2.rectangle(pick,
@@ -124,15 +127,15 @@ def printColor(event,x,y,flags,param):
             r_v = int(np.mean(r_hsv_img[:,:,2]))
 
             r_txt0 = 'Opposite Color'
-            cv2.putText(pick, r_txt0, (180, 180), \
+            cv2.putText(pick, r_txt0, (180, 160), \
                     cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 1, cv2.LINE_AA)
             r_txt1 = 'RGB:' + str(r_r) + ',' + str (r_g) + \
                 ',' + str(r_b)
-            cv2.putText(pick, r_txt1, (200, 200), \
+            cv2.putText(pick, r_txt1, (200, 180), \
                     cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 1, cv2.LINE_AA)
             r_txt2 = 'HSV:' + str(r_h) + ',' + str (r_s) + \
                 ',' + str(r_v)
-            cv2.putText(pick, r_txt2, (200, 220), \
+            cv2.putText(pick, r_txt2, (200, 200), \
                     cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 1, cv2.LINE_AA)
 
             
