@@ -60,7 +60,7 @@ python color_picker.py example.jpg
 
 - Select a region using Shift + Left Click and Drag.
 - The selected color's details will be displayed in a new window.
-![Selected](imgs/select.png)
+![Selected](imgs/selected.png)
 
 ## Functions Overview
 - get_text_size(text, image, font): Calculate the bounding box size for the given text.
