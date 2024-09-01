@@ -49,8 +49,7 @@ def get_color_info_text(
         f"HSV: {h} , {s} , {v}",
         f"Colorcode: {r:02x}{g:02x}{b:02x}",
         f"Colorname: {color_name}",
-        "Coordinate:",
-        f"{iy}:{y}x{ix}:{x}",
+        f"Coordinate: {iy}:{y}x{ix}:{x}",
     ]
 
 
@@ -60,46 +59,68 @@ def calculate_complementary_and_opposite(r, g, b):
     r_rgb = (255 - r, 255 - g, 255 - b)
     return c_rgb, r_rgb
 
+
 def show_pick_window(rec_img, x, y):
-        L_ast, a_ast, b_ast = calculate_average_color(rec_img, cv2.COLOR_BGR2Lab)
-        c_ast = int(np.sqrt(a_ast**2 + b_ast**2))
-        r, g, b = calculate_average_color(rec_img, cv2.COLOR_BGR2RGB)
-        h, s, v = calculate_average_color(rec_img, cv2.COLOR_BGR2HSV)
-        color_name = rgb_to_name((r, g, b))
+    L_ast, a_ast, b_ast = calculate_average_color(rec_img, cv2.COLOR_BGR2Lab)
+    c_ast = int(np.sqrt(a_ast**2 + b_ast**2))
+    r, g, b = calculate_average_color(rec_img, cv2.COLOR_BGR2RGB)
+    h, s, v = calculate_average_color(rec_img, cv2.COLOR_BGR2HSV)
+    color_name = rgb_to_name((r, g, b))
 
-        c_rgb, r_rgb = calculate_complementary_and_opposite(r, g, b)
+    c_rgb, r_rgb = calculate_complementary_and_opposite(r, g, b)
 
-        height, width = rec_img.shape[:2]
-        pick_height = max(240, int(height * 1.2))
-        pick_width = max(480, int(width * 1.2))
-        pick = np.full((pick_height, pick_width, 3), (b, g, r), dtype=np.uint8)
-        pick[0:height, 0:width] = rec_img
+    height, width = rec_img.shape[:2]
+    pick_height = max(240, int(height * 1.2))
+    pick_width = max(480, int(width * 1.2))
+    pick = np.full((pick_height, pick_width, 3), (b, g, r), dtype=np.uint8)
+    pick[0:height, 0:width] = rec_img
 
-        color_info = get_color_info_text(
-            L_ast, a_ast, b_ast, c_ast, r, g, b, h, s, v, color_name, iy, y, ix, x
-        )
-        positions = [(3, i) for i in range(20, 141, 20)]
-        for text, pos in zip(color_info, positions):
-            draw_text(pick, text, pos)
+    color_info = get_color_info_text(
+        L_ast, a_ast, b_ast, c_ast, r, g, b, h, s, v, color_name, iy, y, ix, x
+    )
+    positions = [(3, i) for i in range(20, 141, 20)]
+    for text, pos in zip(color_info, positions):
+        draw_text(pick, text, pos)
 
-        cv2.rectangle(
-            pick, pt1=(360, 60), pt2=(480, 140), color=c_rgb[::-1], thickness=-1
-        )
-        draw_text(pick, "Complementary Color", (300, 60))
-        draw_text(pick, f"RGB: {c_rgb[0]}, {c_rgb[1]}, {c_rgb[2]}", (310, 80))
-        draw_text(pick, f"HSV: {h}, {s}, {v}", (310, 100))
+    rec_pos_x = pick_width - 120
+    rec_pos_x_str = rec_pos_x - 60
+    rec_pos_y = pick_height - 180
 
-        cv2.rectangle(
-            pick, pt1=(360, 160), pt2=(480, 360), color=r_rgb[::-1], thickness=-1
-        )
-        draw_text(pick, "Opposite Color", (300, 160))
-        draw_text(pick, f"RGB: {r_rgb[0]}, {r_rgb[1]}, {r_rgb[2]}", (310, 180))
-        draw_text(pick, f"HSV: {h}, {s}, {v}", (310, 200))
+    cv2.rectangle(
+        pick,
+        pt1=(rec_pos_x, rec_pos_y),
+        pt2=(pick_width, rec_pos_y + 80),
+        color=c_rgb[::-1],
+        thickness=-1,
+    )
+    draw_text(pick, "Complementary Color", (rec_pos_x_str, rec_pos_y))
+    draw_text(
+        pick,
+        f"RGB: {c_rgb[0]}, {c_rgb[1]}, {c_rgb[2]}",
+        (rec_pos_x_str, rec_pos_y + 20),
+    )
+    draw_text(pick, f"HSV: {h}, {s}, {v}", (rec_pos_x_str, rec_pos_y + 40))
 
-        cv2.imshow("pick", pick)
-        view_img = img.copy()
-        cv2.rectangle(view_img, (ix, iy), (x, y), (0, 0, 255), 1)
-        cv2.imshow(basename, view_img)
+    cv2.rectangle(
+        pick,
+        pt1=(rec_pos_x, rec_pos_y + 100),
+        pt2=(pick_width, pick_height),
+        color=r_rgb[::-1],
+        thickness=-1,
+    )
+    draw_text(pick, "Opposite Color", (rec_pos_x_str, rec_pos_y + 100))
+    draw_text(
+        pick,
+        f"RGB: {r_rgb[0]}, {r_rgb[1]}, {r_rgb[2]}",
+        (rec_pos_x_str, rec_pos_y + 120),
+    )
+    draw_text(pick, f"HSV: {h}, {s}, {v}", (rec_pos_x_str, rec_pos_y + 140))
+
+    cv2.imshow("pick", pick)
+    view_img = img.copy()
+    cv2.rectangle(view_img, (ix, iy), (x, y), (0, 0, 255), 1)
+    cv2.imshow(basename, view_img)
+
 
 def printColor(event, x, y, flags, param):
     global ix, iy, drawing
@@ -118,8 +139,9 @@ def printColor(event, x, y, flags, param):
         show_pick_window(rec_img, x, y)
     elif event == cv2.EVENT_LBUTTONUP:
         drawing = False
-        rec_img = img[y:y+1, x:x+1]
+        rec_img = img[y : y + 1, x : x + 1]
         show_pick_window(rec_img, x, y)
+
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
