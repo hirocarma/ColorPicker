@@ -44,7 +44,7 @@ This Python application allows users to interactively pick a color from an image
 
 2. The image will be displayed in a window. Use the mouse to select a region of the image:
 
-    - **Shift + Left Click + Drag**: Start selecting a region of interest.
+    - **Shift + Left Click + Drag** or **Left Click**: Start selecting a region of interest.
     - **Release the mouse button**: The program will calculate and display information about the selected color region.
 
 3. To close the program:

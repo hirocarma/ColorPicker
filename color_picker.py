@@ -60,22 +60,7 @@ def calculate_complementary_and_opposite(r, g, b):
     r_rgb = (255 - r, 255 - g, 255 - b)
     return c_rgb, r_rgb
 
-
-def printColor(event, x, y, flags, param):
-    global ix, iy, drawing
-    if event == cv2.EVENT_LBUTTONDOWN and flags & cv2.EVENT_FLAG_SHIFTKEY:
-        drawing = True
-        ix, iy = x, y
-    elif event == cv2.EVENT_MOUSEMOVE and drawing:
-        view_img = img.copy()
-        cv2.rectangle(view_img, (ix, iy), (x, y), (0, 0, 255), 1)
-        cv2.imshow(basename, view_img)
-    elif event == cv2.EVENT_LBUTTONUP and drawing:
-        drawing = False
-        rec_img = img[iy:y, ix:x]
-        if iy == y or ix == x:
-            rec_img = img[iy : y + 1, ix : x + 1]
-
+def show_pick_window(rec_img, x, y):
         L_ast, a_ast, b_ast = calculate_average_color(rec_img, cv2.COLOR_BGR2Lab)
         c_ast = int(np.sqrt(a_ast**2 + b_ast**2))
         r, g, b = calculate_average_color(rec_img, cv2.COLOR_BGR2RGB)
@@ -116,6 +101,25 @@ def printColor(event, x, y, flags, param):
         cv2.rectangle(view_img, (ix, iy), (x, y), (0, 0, 255), 1)
         cv2.imshow(basename, view_img)
 
+def printColor(event, x, y, flags, param):
+    global ix, iy, drawing
+    if event == cv2.EVENT_LBUTTONDOWN and flags & cv2.EVENT_FLAG_SHIFTKEY:
+        drawing = True
+        ix, iy = x, y
+    elif event == cv2.EVENT_MOUSEMOVE and drawing:
+        view_img = img.copy()
+        cv2.rectangle(view_img, (ix, iy), (x, y), (0, 0, 255), 1)
+        cv2.imshow(basename, view_img)
+    elif event == cv2.EVENT_LBUTTONUP and drawing:
+        drawing = False
+        rec_img = img[iy:y, ix:x]
+        if iy == y or ix == x:
+            rec_img = img[iy : y + 1, ix : x + 1]
+        show_pick_window(rec_img, x, y)
+    elif event == cv2.EVENT_LBUTTONUP:
+        drawing = False
+        rec_img = img[y:y+1, x:x+1]
+        show_pick_window(rec_img, x, y)
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
