@@ -145,10 +145,10 @@ def show_pick_window(rec_img, x, y):
 
 def printColor(event, x, y, flags, param):
     global ix, iy, drawing
-    if event == cv2.EVENT_LBUTTONDOWN and flags & cv2.EVENT_FLAG_CTRLKEY:
+    if event == cv2.EVENT_LBUTTONUP and flags & cv2.EVENT_FLAG_CTRLKEY:
         drawing = False
         rec_img = img.copy()
-        show_pick_window(rec_img, ix, iy)
+        show_pick_window(rec_img, 0, 0)
     elif event == cv2.EVENT_LBUTTONDOWN and flags & cv2.EVENT_FLAG_SHIFTKEY:
         drawing = True
         ix, iy = x, y
