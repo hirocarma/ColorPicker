@@ -70,6 +70,8 @@ python color_picker.py example.jpg
 - draw_text(image, text, position, font_scale=1, color=(0, 0, 0), thickness=1): Utility function to draw text on an image.
 - calculate_average_color(image, color_space): Calculate the average color of a given region in the specified color space.
 - calculate_complementary_and_opposite(r, g, b): Calculate the complementary and opposite RGB colors.
+- recimg_overlay(rec_img, rec_pt1, rec_pt2):Make overlay mat image for text background.
+- show_pick_window(rec_img, x, y):Show new window for selected regions.
 - printColor(event, x, y, flags, param): Main callback function to handle mouse events and display color information.
 
 ## License
