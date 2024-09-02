@@ -139,14 +139,16 @@ def show_pick_window(rec_img, x, y):
 
     cv2.imshow("pick", pick)
     view_img = img.copy()
-    cv2.rectangle(view_img, (ix, iy), (x, y), (0, 0, 255), 1)
+    if ix == x and iy ==y:
+        cv2.circle(view_img, (x, y), 6, (r_rgb[0], r_rgb[1], r_rgb[2]), 1)
+    elif not np.array_equal(view_img, rec_img):
+        cv2.rectangle(view_img, (ix, iy), (x, y), (0, 0, 255), 1)
     cv2.imshow(basename, view_img)
 
 
 def printColor(event, x, y, flags, param):
     global ix, iy, drawing
     if event == cv2.EVENT_LBUTTONUP and flags & cv2.EVENT_FLAG_CTRLKEY:
-        drawing = False
         rec_img = img.copy()
         show_pick_window(rec_img, 0, 0)
     elif event == cv2.EVENT_LBUTTONDOWN and flags & cv2.EVENT_FLAG_SHIFTKEY:
@@ -159,11 +161,9 @@ def printColor(event, x, y, flags, param):
     elif event == cv2.EVENT_LBUTTONUP and drawing:
         drawing = False
         rec_img = img[iy:y, ix:x]
-        if iy == y or ix == x:
-            rec_img = img[iy : y + 1, ix : x + 1]
         show_pick_window(rec_img, x, y)
     elif event == cv2.EVENT_LBUTTONUP:
-        drawing = False
+        ix, iy = x, y
         rec_img = img[y : y + 1, x : x + 1]
         show_pick_window(rec_img, x, y)
 
@@ -184,6 +184,7 @@ if __name__ == "__main__":
         key = cv2.waitKey(0) & 0xFF
         if key == ord("q"):
             cv2.destroyWindow("pick")
+            cv2.imshow(basename, img)
         elif key == 27:  # Esc
             break
 
