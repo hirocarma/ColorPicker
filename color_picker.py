@@ -50,6 +50,7 @@ def get_color_info_text(
         f"HSV: {h} , {s} , {v}",
         f"Colorcode: {r:02x}{g:02x}{b:02x}",
         f"Colorname: {color_name}",
+        f" ",
         f"Coordinate: {iy}:{y}x{ix}:{x}",
     ]
 
@@ -89,13 +90,13 @@ def show_pick_window(rec_img, x, y):
 
     pick = np.full((pick_height, pick_width, 3), (b, g, r), dtype=np.uint8)
     pick[0:height, 0:width] = rec_img
-    pick = recimg_overlay(pick, (0, 0), (290, 150))
+    pick = recimg_overlay(pick, (0, 0), (290, 170))
 
     color_info = get_color_info_text(
         L_ast, a_ast, b_ast, c_ast, r, g, b, h, s, v, color_name, iy, y, ix, x
     )
 
-    text_positions = [(3, i) for i in range(20, 141, 20)]
+    text_positions = [(3, i) for i in range(20, 161, 20)]
     for text, pos in zip(color_info, text_positions):
         draw_text(pick, text, pos)
         print(text)
@@ -127,9 +128,10 @@ def show_pick_window(rec_img, x, y):
     )
 
     cv2.imshow("pick", pick)
+
     view_img = img.copy()
     if ix == x and iy == y:
-        cv2.circle(view_img, (x, y), 6, (r_rgb[0], r_rgb[1], r_rgb[2]), 1)
+        cv2.circle(view_img, (x, y), 6, r_rgb[::-1], 2)
     elif not np.array_equal(view_img, rec_img):
         cv2.rectangle(view_img, (ix, iy), (x, y), (0, 0, 255), 1)
     cv2.imshow(basename, view_img)
