@@ -56,22 +56,23 @@ def get_color_info_text(
 
 def calculate_complementary_and_opposite(r, g, b):
     val = int(max([r, g, b])) + int(min([r, g, b]))
+
+    # Complementary Color
     c_rgb = (val - r, val - g, val - b)
+    c_rgb_normalized = np.array([[c_rgb]], dtype=np.uint8)
+    c_hsv = cv2.cvtColor(c_rgb_normalized, cv2.COLOR_RGB2HSV)[0][0]
+
+    # Opposite Color
     r_rgb = (255 - r, 255 - g, 255 - b)
-    return c_rgb, r_rgb
+    r_rgb_normalized = np.array([[r_rgb]], dtype=np.uint8)
+    r_hsv = cv2.cvtColor(r_rgb_normalized, cv2.COLOR_RGB2HSV)[0][0]
+    return (c_rgb, tuple(c_hsv)), (r_rgb, tuple(r_hsv))
 
 
-def recimg_overlay(rec_img, rec_pt1, rec_pt2):
-    overlay = rec_img.copy()
-    cv2.rectangle(
-        overlay,
-        pt1=rec_pt1,
-        pt2=rec_pt2,
-        color=(255, 255, 255),
-        thickness=-1,
-    )
-    mat_img = cv2.addWeighted(overlay, 0.4, rec_img, 0.6, 0)
-    return mat_img.copy()
+def recimg_overlay(image, pt1, pt2, color=(255, 255, 255), alpha=0.4):
+    overlay = image.copy()
+    cv2.rectangle(overlay, pt1, pt2, color[::-1], thickness=-1)
+    return cv2.addWeighted(overlay, alpha, image, 1 - alpha, 0)
 
 
 def show_pick_window(rec_img, x, y):
@@ -80,66 +81,54 @@ def show_pick_window(rec_img, x, y):
     r, g, b = calculate_average_color(rec_img, cv2.COLOR_BGR2RGB)
     h, s, v = calculate_average_color(rec_img, cv2.COLOR_BGR2HSV)
     color_name = rgb_to_name((r, g, b))
-
-    c_rgb, r_rgb = calculate_complementary_and_opposite(r, g, b)
+    (c_rgb, c_hsv), (r_rgb, r_hsv) = calculate_complementary_and_opposite(r, g, b)
 
     height, width = rec_img.shape[:2]
     pick_height = max(240, int(height * 1.2))
     pick_width = max(500, int(width * 1.2))
+
     pick = np.full((pick_height, pick_width, 3), (b, g, r), dtype=np.uint8)
     pick[0:height, 0:width] = rec_img
+    pick = recimg_overlay(pick, (0, 0), (290, 150))
 
     color_info = get_color_info_text(
         L_ast, a_ast, b_ast, c_ast, r, g, b, h, s, v, color_name, iy, y, ix, x
     )
-    pick = recimg_overlay(pick, (0, 0), (290, 150))
 
-    positions = [(3, i) for i in range(20, 141, 20)]
-    for text, pos in zip(color_info, positions):
+    text_positions = [(3, i) for i in range(20, 141, 20)]
+    for text, pos in zip(color_info, text_positions):
         draw_text(pick, text, pos)
+        print(text)
 
-    rec_pos_x = pick_width - 200
-    rec_pos_y = pick_height - 180
+    def draw_color_info(image, pos, size, color, label, rgb, hsv):
+        cv2.rectangle(
+            image, pos, (pos[0] + size[0], pos[1] + size[1]), color[::-1], thickness=-1
+        )
+        image = recimg_overlay(image, (pos[0], pos[1]), (pos[0] + 200, pos[1] + 60))
+        draw_text(image, label, (pos[0], pos[1] + 20), color=(0, 0, 0), font_scale=0.9)
+        draw_text(image, f"RGB: {rgb[0]}, {rgb[1]}, {rgb[2]}", (pos[0], pos[1] + 40))
+        draw_text(image, f"HSV: {hsv[0]}, {hsv[1]}, {hsv[2]}", (pos[0], pos[1] + 60))
+        return image
 
-    cv2.rectangle(
+    complementary_pos = (pick_width - 200, pick_height - 220)
+    pick = draw_color_info(
         pick,
-        pt1=(rec_pos_x, rec_pos_y - 20),
-        pt2=(pick_width, rec_pos_y + 80),
-        color=c_rgb[::-1],
-        thickness=-1,
+        complementary_pos,
+        (200, 100),
+        c_rgb,
+        "Complementary Color",
+        c_rgb,
+        c_hsv,
     )
-    pick = recimg_overlay(
-        pick, (rec_pos_x, rec_pos_y - 20), (pick_width, rec_pos_y + 48)
-    )
-    draw_text(pick, "Complementary Color", (rec_pos_x, rec_pos_y))
-    draw_text(
-        pick,
-        f"RGB: {c_rgb[0]}, {c_rgb[1]}, {c_rgb[2]}",
-        (rec_pos_x, rec_pos_y + 20),
-    )
-    draw_text(pick, f"HSV: {h}, {s}, {v}", (rec_pos_x, rec_pos_y + 40))
 
-    cv2.rectangle(
-        pick,
-        pt1=(rec_pos_x, rec_pos_y + 80),
-        pt2=(pick_width, pick_height),
-        color=r_rgb[::-1],
-        thickness=-1,
+    opposite_pos = (pick_width - 200, pick_height - 100)
+    pick = draw_color_info(
+        pick, opposite_pos, (200, 100), r_rgb, "Opposite Color", r_rgb, r_hsv
     )
-    pick = recimg_overlay(
-        pick, (rec_pos_x, rec_pos_y + 80), (pick_width, rec_pos_y + 148)
-    )
-    draw_text(pick, "Opposite Color", (rec_pos_x, rec_pos_y + 100))
-    draw_text(
-        pick,
-        f"RGB: {r_rgb[0]}, {r_rgb[1]}, {r_rgb[2]}",
-        (rec_pos_x, rec_pos_y + 120),
-    )
-    draw_text(pick, f"HSV: {h}, {s}, {v}", (rec_pos_x, rec_pos_y + 140))
 
     cv2.imshow("pick", pick)
     view_img = img.copy()
-    if ix == x and iy ==y:
+    if ix == x and iy == y:
         cv2.circle(view_img, (x, y), 6, (r_rgb[0], r_rgb[1], r_rgb[2]), 1)
     elif not np.array_equal(view_img, rec_img):
         cv2.rectangle(view_img, (ix, iy), (x, y), (0, 0, 255), 1)
