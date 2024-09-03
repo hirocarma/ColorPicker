@@ -45,7 +45,7 @@ This Python application allows users to interactively pick a color from an image
 2. The image will be displayed in a window. Use the mouse to select a region of the image:
 
     - **Shift + Left Click + Drag**: Select a region.
-    - **Left Click**: Select a point.
+    - **Shift + Left Click**: Select a point.
     - **Ctrl + Left Click**: Select all regions of the image.
     - **Release the mouse button**: The program will calculate and display information about the selected color region.
 
@@ -65,14 +65,21 @@ python color_picker.py example.jpg
 ![Selected](imgs/selected.png)
 
 ## Functions Overview
-- get_text_size(text, image, font): Calculate the bounding box size for the given text.
 - rgb_to_name(rgb): Convert RGB values to the closest CSS4 color name.
-- draw_text(image, text, position, font_scale=1, color=(0, 0, 0), thickness=1): Utility function to draw text on an image.
-- calculate_average_color(image, color_space): Calculate the average color of a given region in the specified color space.
+
+- draw_text(image, text, position, font_scale=1, color=(0, 0, 0), thickness=1): Draw text on an image.
+
+- calculate_average_color(image, color_space): Calculate the average color of a given image in the specified color space.
+
+- get_color_info_text(L_ast, a_ast, b_ast, c_ast, r, g, b, h, s, v, color_name, iy, y, ix, x): Generate color information text.
+
 - calculate_complementary_and_opposite(r, g, b): Calculate the complementary and opposite RGB colors.
-- recimg_overlay(rec_img, rec_pt1, rec_pt2):Make overlay mat image for text background.
-- show_pick_window(rec_img, x, y):Show new window for selected regions.
-- printColor(event, x, y, flags, param): Main callback function to handle mouse events and display color information.
+
+- recimg_overlay(image, pt1, pt2, color=(255, 255, 255), alpha=0.4): Overlay a semi-transparent rectangle on an image.
+
+- show_pick_window(rec_img, x, y): Display a window with color information for a selected image region.
+
+- printColor(event, x, y, flags, param): Handle mouse events and display color information.
 
 ## License
 This project is licensed under the MIT License - see the LICENSE file for details.
