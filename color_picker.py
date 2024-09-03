@@ -150,12 +150,9 @@ def printColor(event, x, y, flags, param):
     elif event == cv2.EVENT_LBUTTONUP and drawing:
         drawing = False
         rec_img = img[iy:y, ix:x]
+        if iy == y or ix == x:
+                rec_img = img[iy : y + 1, ix : x + 1]
         show_pick_window(rec_img, x, y)
-    elif event == cv2.EVENT_LBUTTONUP:
-        ix, iy = x, y
-        rec_img = img[y : y + 1, x : x + 1]
-        show_pick_window(rec_img, x, y)
-
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
