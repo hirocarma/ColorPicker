@@ -84,12 +84,10 @@ def show_pick_window(rec_img, x, y):
     color_name = rgb_to_name((r, g, b))
     (c_rgb, c_hsv), (r_rgb, r_hsv) = calculate_complementary_and_opposite(r, g, b)
 
-    height, width = rec_img.shape[:2]
-    pick_height = max(240, int(height * 1.2))
-    pick_width = max(500, int(width * 1.2))
+    pick_height = 240
+    pick_width = 500
 
     pick = np.full((pick_height, pick_width, 3), (b, g, r), dtype=np.uint8)
-    pick[0:height, 0:width] = rec_img
     pick = recimg_overlay(pick, (0, 0), (290, 170))
 
     color_info = get_color_info_text(
